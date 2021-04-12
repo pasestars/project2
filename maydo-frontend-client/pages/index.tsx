@@ -1,66 +1,117 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import type { AppProps /*, AppContext */ } from 'next/app'
+import { Layout } from '@components/common'
+import { Grid, Marquee, Hero } from '@components/ui'
+import { ProductCard } from '@components/product'
+// import HomeAllProductsGrid from '@components/common/HomeAllProductsGrid'
+import type { GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 
-export default function Home() {
+// import { getConfig } from '@framework/api'
+// import getAllProducts from '@framework/product/get-all-products'
+// import getSiteInfo from '@framework/common/get-site-info'
+// import getAllPages from '@framework/common/get-all-pages'
+
+export async function getStaticProps({
+  preview,
+  locale,
+}: GetStaticPropsContext) {
+  // const config = getConfig({ locale })
+
+  // const { products } = await getAllProducts({
+  //   variables: { first: 12 },
+  //   config,
+  //   preview,
+  // })
+  let products: any[] = []
+
+  // const { categories, brands } = await getSiteInfo({ config, preview })
+  // const { pages } = await getAllPages({ config, preview })
+  const categories = null,
+    brands = null,
+    pages = null
+  return {
+    props: {
+      products,
+      categories,
+      brands,
+      pages,
+    },
+    revalidate: 14400,
+  }
+}
+
+export default function Home({
+  products,
+  brands,
+  categories,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+    <>
+      <Grid>
+        {products.slice(0, 3).map((product, i) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            imgProps={{
+              width: i === 0 ? 1080 : 540,
+              height: i === 0 ? 1080 : 540,
+            }}
+          />
+        ))}
+      </Grid>
+      <Marquee variant="secondary">
+        {products.slice(0, 3).map((product, i) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            variant="slim"
+            imgProps={{
+              width: 320,
+              height: 320,
+            }}
+          />
+        ))}
+      </Marquee>
+      <Hero
+        headline="Release Details: The Yeezy BOOST 350 V2 ‘Natural'"
+        description="
+        The Yeezy BOOST 350 V2 lineup continues to grow. We recently had the
+        ‘Carbon’ iteration, and now release details have been locked in for
+        this ‘Natural’ joint. Revealed by Yeezy Mafia earlier this year, the
+        shoe was originally called ‘Abez’, which translated to ‘Tin’ in
+        Hebrew. It’s now undergone a name change, and will be referred to as
+        ‘Natural’."
+      />
+      <Grid layout="B">
+        {products.slice(0, 3).map((product, i) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            imgProps={{
+              width: i === 0 ? 1080 : 540,
+              height: i === 0 ? 1080 : 540,
+            }}
+          />
+        ))}
+      </Grid>
+      <Marquee>
+        {products.slice(0, 3).map((product, i) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            variant="slim"
+            imgProps={{
+              width: 320,
+              height: 320,
+            }}
+          />
+        ))}
+      </Marquee>
+      {/* <HomeAllProductsGrid
+        newestProducts={products}
+        categories={categories}
+        brands={brands}
+      /> */}
+    </>
   )
 }
+
+Home.Layout = Layout
